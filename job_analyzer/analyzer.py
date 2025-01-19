@@ -2,6 +2,7 @@ from ollama import chat
 from fastapi import FastAPI, UploadFile, File, HTTPException
 import speech_recognition as sr
 from io import BytesIO
+from ollama import generate
 # Prompt template to handle task extraction and status
 PROMPT = '''
 You are a helpful assistant. I will provide a description of tasks I am working on or plan to work on, and you should convert it into a JSON-like format strictly.
@@ -44,17 +45,9 @@ async def process_audio(audio_file: UploadFile) -> str:
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"Error processing audio: {str(e)}")
 
-# Function to process user input
-def process_tasks(user_input):
-    global Flag
-    messages = [
-        {
-            "role": "user",
-            "content": PROMPT.format(user_input),
-        }
-    ]
-    model = "tinyllama" if Flag else "orca-mini"
-    response = chat(model, messages=messages)
-    Flag = not Flag
-    print(Flag)
-    return response["message"]["content"]
+# Streaming function
+def stream_response(model, messages):
+    # Extract the content string from the messages list
+    prompt = messages[0]["content"]  # Get the "content" field of the first message
+    for part in generate(model, prompt, stream=True):  # Pass the prompt as a string
+        yield part["response"]
