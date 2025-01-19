@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "job-analyzer"
+version = "0.1.0"
+description = "task analyzer tool"
+authors = ["neeraj <neerajsunil2002@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.6"
+uvicorn = "^0.34.0"
+python-multipart = "^0.0.20"
+speechrecognition = "^3.13.0"
+ollama = "^0.4.5"
+ipykernel = "^6.29.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
